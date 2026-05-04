@@ -1,0 +1,80 @@
+import React, { useState, useRef, useEffect } from 'react';
+
+export default function App() {
+  const [isPranked, setIsPranked] = useState(false);
+  const audioRef = useRef(null);
+
+  // Link GitHub diubah ke versi rawusercontent agar bisa diplay langsung
+  const audioUrl = "https://raw.githubusercontent.com/wdsaqgoldbadrustorebotz/Ikyyywow/main/desah-prank_R0qRCEYr.mp3";
+
+  // Fungsi yang dipanggil saat layar disentuh/diklik di mana saja
+  const handleScreenTap = () => {
+    if (!isPranked && audioRef.current) {
+      // Set volume ke maksimal (1.0)
+      audioRef.current.volume = 1.0;
+      
+      // Paksa putar audio
+      audioRef.current.play().catch((err) => {
+        console.error("Gagal memutar audio:", err);
+      });
+      
+      // Ubah tampilan
+      setIsPranked(true);
+    }
+  };
+
+  return (
+    // Membungkus seluruh layar dengan event onClick
+    <div 
+      onClick={handleScreenTap} 
+      className={`min-h-screen w-full flex items-center justify-center p-4 font-sans cursor-pointer transition-colors duration-300 ${isPranked ? 'bg-black' : 'bg-slate-900'}`}
+    >
+      
+      {/* Elemen Audio Tersembunyi */}
+      <audio 
+        ref={audioRef} 
+        src={audioUrl} 
+        className="hidden" 
+        preload="auto" 
+        loop // Looping terus menerus
+      />
+
+      {/* TAMPILAN AWAL (Memancing target untuk menyentuh layar) */}
+      {!isPranked ? (
+        <div className="text-center animate-pulse flex flex-col items-center justify-center pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60 mb-6">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <h1 className="text-2xl md:text-3xl font-medium text-white mb-2">
+            Ketuk layar di mana saja
+          </h1>
+          <p className="text-white/50 text-lg">
+            untuk mengaktifkan suara
+          </p>
+        </div>
+      ) : (
+        /* TAMPILAN SETELAH DISENTUH (Hasil Prank) */
+        <div className="text-center w-full max-w-lg mx-auto pointer-events-none">
+          <div className="animate-bounce mb-8">
+            <span className="text-8xl md:text-[120px] drop-shadow-2xl">🚨</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-red-600 mb-6 uppercase tracking-widest animate-pulse drop-shadow-[0_0_20px_rgba(220,38,38,0.8)]">
+            PANIK!!!
+          </h1>
+          <p className="text-white/80 text-xl font-medium mb-12">
+            Hayo suara apaan tuh?! 🤣
+          </p>
+          
+          <div className="mt-8 p-4 bg-red-950/50 border border-red-500/30 rounded-xl">
+            <p className="text-red-400 text-sm">
+              Volume sudah terkunci maksimal dari sistem.<br/>
+              Tutup tab ini untuk menghentikan.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
